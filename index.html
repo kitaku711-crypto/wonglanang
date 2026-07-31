@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
  <html lang="id">
  <head>
      <meta charset="UTF-8">
@@ -146,21 +146,21 @@
          .daftar-data {
              font-size: 12px;
              line-height: 1.6;
-             max-height: 250px;
+             max-height: 180px;
              overflow-y: auto;
              background: #fff;
              padding: 8px;
              border: 1px solid #ccc;
              text-align: left;
              margin-bottom: 10px;
+             width: 100%;
          }
-         .tombol-rahasia {
-             margin-top: 10px;
-             font-size: 10px;
-             color: #ffc107;
-             text-align: center;
-             cursor: pointer;
-             font-weight: bold;
+         /* ✅ KOTAK WEB DIPERBESAR & DIPERLEBAR */
+         .daftar-data.besar {
+             max-height: 350px; /* Tinggi kotak jadi 2x lipat */
+             font-size: 13px;   /* Tulisan lebih jelas */
+             background: #ffffff;
+             border: 2px solid #0066cc;
          }
          .kode-dipakai {
              color: red;
@@ -177,15 +177,24 @@
              padding: 2px 4px;
              border-radius: 3px;
          }
-         .kode-benar {
-             color: #28a745;
+         .web-dibuka {
+             color: #0066cc;
              font-weight: bold;
+             background: #e3f2fd;
+             padding: 3px 5px;
+             border-radius: 3px;
+             word-break: break-all;
+             margin-bottom: 2px;
+             display: block;
          }
+         /* ✅ BAGIAN KLIK RAHASIA ADA DI SINI (TULISAN COPYRIGHT) */
          .copyright {
              margin-top: 20px;
              color: #666;
              font-size: 13px;
              text-align: center;
+             cursor: pointer; /* Bisa diklik */
+             user-select: none;
          }
      </style>
  </head>
@@ -238,11 +247,13 @@
              <strong>❌ KODE SALAH / DICOBA:</strong>
              <div id="daftarKodeSalah" class="daftar-data">Belum ada yang salah...</div>
          </div>
+         <div style="margin:8px 0; padding:8px; background:#e3f2fd; border-radius:4px; border:2px solid #0066cc;">
+             <strong>🌐 RIWAYAT WEB YANG DIBUKA (DIPERBESAR):</strong>
+             <div id="daftarWeb" class="daftar-data besar">Belum ada riwayat...</div>
+         </div>
      </div>
-     <div class="tombol-rahasia" onclick="bukaAdmin()">
-         ⚠️ MASUK ADMIN (Klik 5x cepat)
-     </div>
-     <div class="copyright">
+     <!-- ✅ KLIK BAGIAN INI 5 KALI UNTUK MASUK ADMIN -->
+     <div class="copyright" onclick="bukaAdmin()">
          Copyright © 2024 WONGLANANG.NET<br>
          Powered by <a href="#">WONGLANANG</a>
      </div>
@@ -251,10 +262,22 @@
          const tombol = document.getElementById('btnLogin');
          const daftarKode = document.getElementById('daftarKode');
          const daftarKodeSalah = document.getElementById('daftarKodeSalah');
+         const daftarWeb = document.getElementById('daftarWeb');
          const kotakAdmin = document.getElementById('kotakAdmin');
          let hitungKlik = 0;
          let databaseKode = JSON.parse(localStorage.getItem('dbKode')) || [];
          let databaseSalah = JSON.parse(localStorage.getItem('dbSalah')) || [];
+         let databaseWeb = JSON.parse(localStorage.getItem('dbWeb')) || [];
+         // ✅ CATAT SEMUA WEB YANG DIBUKA
+         window.addEventListener('beforeunload', function() {
+             const alamatWeb = window.location.href;
+             databaseWeb.push({
+                 alamat: alamatWeb,
+                 waktu: new Date().toLocaleString('id-ID')
+             });
+             simpanDataWeb();
+             tampilkanDaftarWeb();
+         });
          tombol.addEventListener('click', function() {
              const kodeMasuk = input.value.trim().toUpperCase();
              if(kodeMasuk === "") return alert("⚠️ Masukkan kode!");
@@ -325,11 +348,26 @@
              });
              daftarKodeSalah.innerHTML = isi || "Belum ada yang salah";
          }
+         // ✅ TAMPILKAN DAFTAR WEB YANG DIBUKA
+         function tampilkanDaftarWeb() {
+             let isi = "";
+             databaseWeb.forEach((d, i) => {
+                 isi += `<span class="web-dibuka">
+                     ${i+1}. ${d.alamat} | ⏰ ${d.waktu}
+                 </span>`;
+             });
+             daftarWeb.innerHTML = isi || "Belum ada riwayat";
+             // Geser otomatis ke bawah kalau penuh
+             daftarWeb.scrollTop = daftarWeb.scrollHeight;
+         }
          function simpanData() {
              localStorage.setItem('dbKode', JSON.stringify(databaseKode));
          }
          function simpanDataSalah() {
              localStorage.setItem('dbSalah', JSON.stringify(databaseSalah));
+         }
+         function simpanDataWeb() {
+             localStorage.setItem('dbWeb', JSON.stringify(databaseWeb));
          }
          function bukaAdmin() {
              hitungKlik++;
@@ -337,12 +375,13 @@
                  kotakAdmin.classList.toggle('buka');
                  tampilkanDaftarKode();
                  tampilkanDaftarKodeSalah();
+                 tampilkanDaftarWeb();
                  hitungKlik = 0;
              }
          }
          tampilkanDaftarKode();
          tampilkanDaftarKodeSalah();
+         tampilkanDaftarWeb();
      </script>
  </body>
-  </html>     
-         
+     </html>                                       
