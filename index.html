@@ -152,13 +152,15 @@
              padding: 8px;
              border: 1px solid #ccc;
              text-align: left;
+             margin-bottom: 10px;
          }
          .tombol-rahasia {
              margin-top: 10px;
              font-size: 10px;
-             color: #999;
+             color: #ffc107;
              text-align: center;
              cursor: pointer;
+             font-weight: bold;
          }
          .kode-dipakai {
              color: red;
@@ -166,6 +168,17 @@
          }
          .kode-aktif {
              color: green;
+             font-weight: bold;
+         }
+         .kode-salah {
+             color: #dc3545;
+             font-weight: bold;
+             background: #ffebee;
+             padding: 2px 4px;
+             border-radius: 3px;
+         }
+         .kode-benar {
+             color: #28a745;
              font-weight: bold;
          }
          .copyright {
@@ -186,7 +199,7 @@
              <button class="tombol-pilih">QR Code</button>
          </div>
          <p class="teks-petunjuk">Masukkan Kode Voucher kemudian klik login.</p>
-         <input type="text" id="inputKode" class="input-kode" placeholder="Contoh: WN-789-ABC" maxlength="12">
+         <input type="text" id="inputKode" class="input-kode" placeholder="" maxlength="12">
          <button id="btnLogin" class="tombol-login">Login</button>
          <h3 class="judul-paket">Paket Internet Wifi</h3>
          <table class="tabel-paket">
@@ -218,8 +231,12 @@
          <button id="buatKode30Hari" style="background:#28a745; color:white; border:none; padding:6px; border-radius:4px; margin:3px; font-size:12px;">Buat Kode 30 Hari</button>
          
          <div style="margin:8px 0; padding:6px; background:#e9ecef; border-radius:4px;">
-             <strong>📋 DAFTAR KODE:</strong>
-             <div id="daftarKode" class="daftar-data">Belum ada kode dibuat...</div>
+             <strong>✅ KODE BERHASIL / DIPAKAI:</strong>
+             <div id="daftarKode" class="daftar-data">Belum ada kode...</div>
+         </div>
+         <div style="margin:8px 0; padding:6px; background:#ffebee; border-radius:4px;">
+             <strong>❌ KODE SALAH / DICOBA:</strong>
+             <div id="daftarKodeSalah" class="daftar-data">Belum ada yang salah...</div>
          </div>
      </div>
      <div class="tombol-rahasia" onclick="bukaAdmin()">
@@ -233,19 +250,29 @@
          const input = document.getElementById('inputKode');
          const tombol = document.getElementById('btnLogin');
          const daftarKode = document.getElementById('daftarKode');
+         const daftarKodeSalah = document.getElementById('daftarKodeSalah');
          const kotakAdmin = document.getElementById('kotakAdmin');
          let hitungKlik = 0;
          let databaseKode = JSON.parse(localStorage.getItem('dbKode')) || [];
+         let databaseSalah = JSON.parse(localStorage.getItem('dbSalah')) || [];
          tombol.addEventListener('click', function() {
              const kodeMasuk = input.value.trim().toUpperCase();
              if(kodeMasuk === "") return alert("⚠️ Masukkan kode!");
+             databaseSalah.push({
+                 kode: kodeMasuk,
+                 waktu: new Date().toLocaleString('id-ID'),
+                 status: 'Dicoba'
+             });
+             simpanDataSalah();
              const cari = databaseKode.find(k => k.kode === kodeMasuk);
              if(!cari) {
                  alert("❌ KODE TIDAK VALID / SALAH!");
+                 tampilkanDaftarKodeSalah();
                  return;
              }
              if(cari.dipakai) {
                  alert("❌ KODE SUDAH DIPAKAI ORANG LAIN / KADALUARSA!");
+                 tampilkanDaftarKodeSalah();
                  return;
              }
              cari.dipakai = true;
@@ -261,6 +288,7 @@
              }
              input.value = "";
              tampilkanDaftarKode();
+             tampilkanDaftarKodeSalah();
          });
          document.getElementById('buatKode5Jam').addEventListener('click', () => buatKodeBaru("5JAM"));
          document.getElementById('buatKode30Hari').addEventListener('click', () => buatKodeBaru("30HARI"));
@@ -288,18 +316,32 @@
              });
              daftarKode.innerHTML = isi || "Kosong";
          }
+         function tampilkanDaftarKodeSalah() {
+             let isi = "";
+             databaseSalah.forEach((d, i) => {
+                 isi += `<div class="kode-salah">
+                     ${i+1}. ${d.kode} | ⏰ ${d.waktu}
+                 </div>`;
+             });
+             daftarKodeSalah.innerHTML = isi || "Belum ada yang salah";
+         }
          function simpanData() {
              localStorage.setItem('dbKode', JSON.stringify(databaseKode));
+         }
+         function simpanDataSalah() {
+             localStorage.setItem('dbSalah', JSON.stringify(databaseSalah));
          }
          function bukaAdmin() {
              hitungKlik++;
              if(hitungKlik >= 5) {
                  kotakAdmin.classList.toggle('buka');
                  tampilkanDaftarKode();
+                 tampilkanDaftarKodeSalah();
                  hitungKlik = 0;
              }
          }
          tampilkanDaftarKode();
+         tampilkanDaftarKodeSalah();
      </script>
  </body>
- </html>
+              </html>
