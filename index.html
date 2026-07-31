@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+ <html lang="id">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>WONGLANANG NET - Login</title>
+     <style>
+         * {
+             margin: 0;
+             padding: 0;
+             box-sizing: border-box;
+             font-family: Arial, sans-serif;
+         }
+         body {
+             background-color: #ffffff;
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+             justify-content: center;
+             min-height: 100vh;
+             padding: 20px;
+         }
+         .kotak-login {
+             background-color: #2b579a;
+             width: 100%;
+             max-width: 400px;
+             border-radius: 12px;
+             padding: 30px 20px;
+             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+             text-align: center;
+             margin-bottom: 20px;
+         }
+         .judul-utama {
+             color: white;
+             font-size: 36px;
+             font-weight: bold;
+             letter-spacing: 1px;
+             margin-bottom: 20px;
+         }
+         .garis-pemisah {
+             width: 80%;
+             height: 2px;
+             background-color: white;
+             margin: 0 auto 25px auto;
+             opacity: 0.7;
+         }
+         .baris-tombol {
+             display: flex;
+             justify-content: space-between;
+             gap: 8px;
+             margin-bottom: 20px;
+         }
+         .tombol-pilih {
+             flex: 1;
+             background-color: #e0e0e0;
+             border: none;
+             padding: 10px 5px;
+             border-radius: 6px;
+             font-size: 15px;
+             font-weight: bold;
+             color: #333;
+             cursor: pointer;
+         }
+         .tombol-pilih.active {
+             background-color: #d0d0d0;
+         }
+         .teks-petunjuk {
+             color: white;
+             font-size: 16px;
+             margin-bottom: 15px;
+             opacity: 0.9;
+         }
+         .input-kode {
+             width: 100%;
+             padding: 12px 15px;
+             border: none;
+             border-radius: 6px;
+             font-size: 16px;
+             margin-bottom: 15px;
+             text-align: center;
+             letter-spacing: 2px;
+             font-weight: bold;
+         }
+         .tombol-login {
+             width: 100%;
+             background-color: #e0e0e0;
+             border: none;
+             padding: 12px 15px;
+             border-radius: 6px;
+             font-size: 18px;
+             font-weight: bold;
+             color: #333;
+             cursor: pointer;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             gap: 8px;
+             margin-bottom: 30px;
+         }
+         .tombol-login::before {
+             content: "➜";
+             font-weight: bold;
+         }
+         .judul-paket {
+             color: white;
+             font-size: 18px;
+             font-weight: bold;
+             margin-bottom: 12px;
+         }
+         .tabel-paket {
+             width: 100%;
+             border-collapse: collapse;
+             margin-bottom: 25px;
+         }
+         .tabel-paket th, .tabel-paket td {
+             border: 1px solid #ffffff80;
+             padding: 8px 5px;
+             color: white;
+             font-size: 15px;
+         }
+         .tabel-paket th {
+             background-color: #ffffff20;
+         }
+         .teks-bawah {
+             color: white;
+             font-size: 15px;
+             line-height: 1.4;
+         }
+         .kotak-admin {
+             width: 100%;
+             max-width: 400px;
+             background: #f8f9fa;
+             border: 2px solid #28a745;
+             border-radius: 10px;
+             padding: 15px;
+             display: none;
+         }
+         .kotak-admin.buka {
+             display: block;
+         }
+         .kotak-admin h3 {
+             color: #28a745;
+             text-align: center;
+             margin-bottom: 10px;
+         }
+         .daftar-data {
+             font-size: 12px;
+             line-height: 1.6;
+             max-height: 250px;
+             overflow-y: auto;
+             background: #fff;
+             padding: 8px;
+             border: 1px solid #ccc;
+             text-align: left;
+         }
+         .tombol-rahasia {
+             margin-top: 10px;
+             font-size: 10px;
+             color: #999;
+             text-align: center;
+             cursor: pointer;
+         }
+         .kode-dipakai {
+             color: red;
+             text-decoration: line-through;
+         }
+         .kode-aktif {
+             color: green;
+             font-weight: bold;
+         }
+         .copyright {
+             margin-top: 20px;
+             color: #666;
+             font-size: 13px;
+             text-align: center;
+         }
+     </style>
+ </head>
+ <body>
+     <div class="kotak-login">
+         <h1 class="judul-utama">WONGLANANG<br>NET</h1>
+         <div class="garis-pemisah"></div>
+         <div class="baris-tombol">
+             <button class="tombol-pilih active">Voucher</button>
+             <button class="tombol-pilih">Member</button>
+             <button class="tombol-pilih">QR Code</button>
+         </div>
+         <p class="teks-petunjuk">Masukkan Kode Voucher kemudian klik login.</p>
+         <input type="text" id="inputKode" class="input-kode" placeholder="Contoh: WN-789-ABC" maxlength="12">
+         <button id="btnLogin" class="tombol-login">Login</button>
+         <h3 class="judul-paket">Paket Internet Wifi</h3>
+         <table class="tabel-paket">
+             <tr>
+                 <th>Paket</th>
+                 <th>Aktif</th>
+                 <th>Harga</th>
+             </tr>
+             <tr>
+                 <td>5H</td>
+                 <td>5 Jam</td>
+                 <td>Rp 3.000</td>
+             </tr>
+             <tr>
+                 <td>30H</td>
+                 <td>30 Hari</td>
+                 <td>Rp 80.000</td>
+             </tr>
+         </table>
+         <p class="teks-bawah">
+             SOLUSI INTERNET DESA HUBUNGI<br>
+             WONGLANANG NET
+         </p>
+     </div>
+     <div id="kotakAdmin" class="kotak-admin">
+         <h3>👨‍💻 PANEL ADMIN - KONTROL KODE</h3>
+         
+         <button id="buatKode5Jam" style="background:#007bff; color:white; border:none; padding:6px; border-radius:4px; margin:3px; font-size:12px;">Buat Kode 5 Jam</button>
+         <button id="buatKode30Hari" style="background:#28a745; color:white; border:none; padding:6px; border-radius:4px; margin:3px; font-size:12px;">Buat Kode 30 Hari</button>
+         
+         <div style="margin:8px 0; padding:6px; background:#e9ecef; border-radius:4px;">
+             <strong>📋 DAFTAR KODE:</strong>
+             <div id="daftarKode" class="daftar-data">Belum ada kode dibuat...</div>
+         </div>
+     </div>
+     <div class="tombol-rahasia" onclick="bukaAdmin()">
+         ⚠️ MASUK ADMIN (Klik 5x cepat)
+     </div>
+     <div class="copyright">
+         Copyright © 2024 WONGLANANG.NET<br>
+         Powered by <a href="#">WONGLANANG</a>
+     </div>
+     <script>
+         const input = document.getElementById('inputKode');
+         const tombol = document.getElementById('btnLogin');
+         const daftarKode = document.getElementById('daftarKode');
+         const kotakAdmin = document.getElementById('kotakAdmin');
+         let hitungKlik = 0;
+         let databaseKode = JSON.parse(localStorage.getItem('dbKode')) || [];
+         tombol.addEventListener('click', function() {
+             const kodeMasuk = input.value.trim().toUpperCase();
+             if(kodeMasuk === "") return alert("⚠️ Masukkan kode!");
+             const cari = databaseKode.find(k => k.kode === kodeMasuk);
+             if(!cari) {
+                 alert("❌ KODE TIDAK VALID / SALAH!");
+                 return;
+             }
+             if(cari.dipakai) {
+                 alert("❌ KODE SUDAH DIPAKAI ORANG LAIN / KADALUARSA!");
+                 return;
+             }
+             cari.dipakai = true;
+             cari.waktuPakai = new Date().toLocaleString('id-ID');
+             simpanData();
+             if(cari.jenis === "5JAM") {
+                 alert("✅ BERHASIL! Paket 5 Jam Aktif.");
+                 window.location.href = "http://captive.apple.com";
+             }
+             if(cari.jenis === "30HARI") {
+                 alert("✅ BERHASIL! Paket 30 Hari Aktif.");
+                 window.location.href = "http://captive.apple.com";
+             }
+             input.value = "";
+             tampilkanDaftarKode();
+         });
+         document.getElementById('buatKode5Jam').addEventListener('click', () => buatKodeBaru("5JAM"));
+         document.getElementById('buatKode30Hari').addEventListener('click', () => buatKodeBaru("30HARI"));
+         function buatKodeBaru(jenis) {
+             const kodeUnik = "WN-" + Math.random().toString(36).substring(2, 5).toUpperCase() + "-" + Math.random().toString(36).substring(2, 5).toUpperCase();
+             
+             databaseKode.push({
+                 kode: kodeUnik,
+                 jenis: jenis,
+                 dibuat: new Date().toLocaleString('id-ID'),
+                 dipakai: false,
+                 waktuPakai: "-"
+             });
+             simpanData();
+             tampilkanDaftarKode();
+             alert("✅ KODE BERHASIL DIBUAT:\n" + kodeUnik + "\nJenis: " + (jenis==="5JAM" ? "5 Jam" : "30 Hari"));
+         }
+         function tampilkanDaftarKode() {
+             let isi = "";
+             databaseKode.forEach((d, i) => {
+                 let status = d.dipakai ? "kode-dipakai" : "kode-aktif";
+                 isi += `<div class="${status}">
+                     ${i+1}. ${d.kode} | ${d.jenis} | ${d.dipakai ? 'Dipakai: '+d.waktuPakai : 'BELUM PAKAI'}
+                 </div>`;
+             });
+             daftarKode.innerHTML = isi || "Kosong";
+         }
+         function simpanData() {
+             localStorage.setItem('dbKode', JSON.stringify(databaseKode));
+         }
+         function bukaAdmin() {
+             hitungKlik++;
+             if(hitungKlik >= 5) {
+                 kotakAdmin.classList.toggle('buka');
+                 tampilkanDaftarKode();
+                 hitungKlik = 0;
+             }
+         }
+         tampilkanDaftarKode();
+     </script>
+ </body>
+ </html>
